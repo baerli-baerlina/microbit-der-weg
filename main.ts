@@ -17,6 +17,7 @@ function punkt_nach_oben () {
 function prüfeobgleich () {
     if (ypos == ypos2 && xpos == xpos2) {
         zufallspunkt()
+        music.playMelody("C5 B A G F E D C ", 240)
     }
 }
 function punkt_nach_links () {
