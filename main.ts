@@ -3,7 +3,6 @@ function punkt_nach_rechts () {
     if (xpos > 4) {
         xpos = 0
     }
-    zeigeBildschirm()
     prüfeobgleich()
     control.waitMicros(250000)
 }
@@ -12,14 +11,12 @@ function punkt_nach_oben () {
     if (ypos < 0) {
         ypos = 4
     }
-    zeigeBildschirm()
     prüfeobgleich()
     control.waitMicros(250000)
 }
 function prüfeobgleich () {
     if (ypos == ypos2 && xpos == xpos2) {
         zufallspunkt()
-        zeigeBildschirm()
     }
 }
 function punkt_nach_links () {
@@ -27,18 +24,13 @@ function punkt_nach_links () {
     if (xpos < 0) {
         xpos = 4
     }
-    zeigeBildschirm()
     prüfeobgleich()
     control.waitMicros(250000)
-}
-function zeigeBildschirm () {
-    basic.clearScreen()
-    led.plot(xpos2, ypos2)
-    led.plot(xpos, ypos)
 }
 function zufallspunkt () {
     xpos2 = randint(0, 4)
     ypos2 = randint(0, 4)
+    prüfeobgleich()
 }
 function initPin () {
     pins.setPull(DigitalPin.P15, PinPullMode.PullNone)
@@ -51,10 +43,10 @@ function punkt_nach_unten () {
     if (ypos > 4) {
         ypos = 0
     }
-    zeigeBildschirm()
     prüfeobgleich()
     control.waitMicros(250000)
 }
+let blink = 0
 let xpos2 = 0
 let ypos2 = 0
 let ypos = 0
@@ -64,7 +56,13 @@ initPin()
 xpos = 0
 ypos = 4
 zufallspunkt()
-zeigeBildschirm()
+loops.everyInterval(500, function () {
+    if (blink == 0) {
+        blink = 1
+    } else {
+        blink = 0
+    }
+})
 basic.forever(function () {
     if (pins.digitalReadPin(DigitalPin.P13) == 0) {
         punkt_nach_unten()
@@ -76,5 +74,15 @@ basic.forever(function () {
         punkt_nach_links()
     } else {
     	
+    }
+})
+loops.everyInterval(100, function () {
+    if (blink == 0) {
+        basic.clearScreen()
+        led.plot(xpos2, ypos2)
+        led.plot(xpos, ypos)
+    } else {
+        basic.clearScreen()
+        led.plot(xpos, ypos)
     }
 })
